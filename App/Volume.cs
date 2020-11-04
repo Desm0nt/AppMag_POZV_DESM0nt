@@ -30,7 +30,8 @@ namespace App
                 {
                     for (int h = 0; h < layer.Dicom.height; h = h + 1)
                     {
-                        vol[w, h, z] = (layer.Dicom.Pixels16[w * layer.Dicom.height + h] >= 32900) ? 1 : 0;
+                        //vol[w, h, z] = (layer.Dicom.Pixels16[w * layer.Dicom.height + h] >= 32900) ? 1 : 0;
+                        vol[w, h, z] = (layer.ImageFromJpg.GetPixel(w, h).GetBrightness() > 0.02) ? 1 : 0;
                     }
                 }
                 z++;
