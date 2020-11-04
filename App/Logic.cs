@@ -189,7 +189,9 @@
         {
             //Декодирование Dicom файла
             DicomDecoder dicom = new DicomDecoder {DicomFileName = file};
-            Bitmap bitmap = new Bitmap(file +".jpg");
+            var filepath = Path.GetDirectoryName(file);
+            var filename = Path.GetFileNameWithoutExtension(file);
+            Bitmap bitmap = new Bitmap(filepath + "\\jpg\\" + filename +".jpg");
 
             Mat segmentJpg = OpenCvSharp.Extensions.BitmapConverter.ToMat(bitmap);
 
