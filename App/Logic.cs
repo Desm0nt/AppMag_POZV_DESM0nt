@@ -222,7 +222,8 @@
                 //SeriesNumber = dicom.SeriesNumber,
                 Origin = origin, //Оригинальное изображение 
                 SegmentMatrix = segment, //Сегментированное изображение
-                SegmentMatrixJpg = segmentJpg
+                SegmentMatrixJpg = segmentJpg,
+                ImageFromJpg = bitmap
                 //LaplaceMatrix = laplace //Контурное изображение
             };
         }

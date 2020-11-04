@@ -1,4 +1,6 @@
 ﻿using OpenCvSharp;
+using System.Drawing;
+
 namespace App
 {
     public struct Layer
@@ -10,6 +12,8 @@ namespace App
         public Mat SegmentMatrix { get; set; }
 
         public Mat SegmentMatrixJpg { get; set; }
+
+        public Bitmap ImageFromJpg { get; set; }
 
 
         //public Mat LaplaceMatrix { get; set; }
