@@ -52,8 +52,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MathNet.Numerics, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MathNet.Numerics.4.7.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    <Reference Include="MathNet.Numerics, Version=4.12.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.12.0\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenCvSharp3-AnyCPU.4.0.0.20181129\lib\net461\OpenCvSharp.dll</HintPath>
@@ -86,7 +86,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Direction.cs" />
     <Compile Include="Model\ComsolRepository.cs" />
     <Compile Include="Model\GgenRepository.cs" />
     <Compile Include="Model\IRepository.cs" />
@@ -99,37 +98,25 @@
     <Compile Include="Model\StlTriangularRepository.cs" />
     <Compile Include="Model\TetgenRepository.cs" />
     <Compile Include="Model\XyzRepository.cs" />
-    <Compile Include="PointHolder.cs" />
-    <Compile Include="DicomDecoder.cs" />
-    <Compile Include="DicomDictionary.cs" />
     <Compile Include="FormShow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormShow.Designer.cs">
       <DependentUpon>FormShow.cs</DependentUpon>
     </Compile>
-    <Compile Include="MatExtension.cs" />
-    <Compile Include="MCCube.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="StlFile.cs" />
-    <Compile Include="StlNormal.cs" />
-    <Compile Include="StlWriter.cs" />
-    <Compile Include="MyTriangle.cs" />
-    <Compile Include="Vertex.cs" />
-    <Compile Include="Layer.cs" />
     <Compile Include="Logic.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Logic.Designer.cs">
       <DependentUpon>Logic.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Volume.cs" />
     <EmbeddedResource Include="FormShow.resx">
       <DependentUpon>FormShow.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -165,6 +152,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AppLib\AppLib.csproj">
+      <Project>{99bcebe3-21eb-4964-8386-63b59a492d66}</Project>
+      <Name>AppLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MeshGenerator\MeshGenerator.csproj">
       <Project>{a8f70938-f908-44fc-93f7-d26091149904}</Project>
       <Name>MeshGenerator</Name>

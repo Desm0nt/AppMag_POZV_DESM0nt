@@ -22,6 +22,7 @@
     using MeshGenerator.Modelling.Solvers;
     using MeshGenerator.Scene;
     using System.Threading.Tasks;
+    using AppLib;
 
     public partial class Logic : Form
     {
@@ -34,7 +35,7 @@
         FeModel model;
         ISolution solution;
         ISolve<SparseMatrix> solver;
-        IRepository<string, List<Tetrahedron>> repository;
+        //IRepository<string, List<Tetrahedron>> repository;
         //IRepository<string, List<Triangle>> trnglRepository;
         IRepository<string, List<Tetrahedron>> tetrahedralRepository;
 
@@ -180,6 +181,8 @@
             return pixels16;
         }
 
+
+        //toDo Убрать после изменения Layer на NewLayer
         /// <summary>
         /// Получение слоя. Считывание Dicom файла. Применение фильтров к изображению.
         /// </summary>

@@ -1,7 +1,7 @@
-﻿namespace App
-{
-    using System.IO;
+﻿using System.IO;
 
+namespace AppLib
+{
     internal class StlWriter
     {
         private const string FloatFormat = "e6";

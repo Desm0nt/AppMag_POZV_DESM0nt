@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace App
+namespace AppLib
 {
-    class MCCube
+    public class MCCube
     {
         private Vertex[] v;
         private Vertex[] e;

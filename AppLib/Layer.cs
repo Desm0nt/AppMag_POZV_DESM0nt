@@ -1,7 +1,7 @@
 ﻿using OpenCvSharp;
 using System.Drawing;
 
-namespace App
+namespace AppLib
 {
     public struct Layer
     {

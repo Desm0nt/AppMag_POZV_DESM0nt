@@ -1,4 +1,4 @@
-﻿namespace App
+﻿namespace AppLib
 {
     using System.Collections.Generic;
 

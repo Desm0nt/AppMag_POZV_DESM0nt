@@ -1,11 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "App\App.csproj", "{86BD9858-84E9-4A17-918D-6BA15C676B96}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeshGenerator", "MeshGenerator\MeshGenerator.csproj", "{A8F70938-F908-44FC-93F7-D26091149904}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeDetectorsApp", "EdgeDetectors\EdgeDetectorsApp.csproj", "{1272FFAD-45BB-492B-960F-42CF6702F3D0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{7A9DEC9B-F5D8-44DE-B29D-96D644E2B432}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dicom", "Dicom", "{0D3799FA-65E0-4CDD-AB3A-A3D4C4A4E36D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DetectorsResults", "DetectorsResults", "{CC6DAD1E-9780-4BB0-AA5A-FDB55D7854E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeDetectorsLib", "EdgeDetectorsLib\EdgeDetectorsLib.csproj", "{AD18D470-ADE4-4D51-B1D8-573A0735B8C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppLib", "AppLib\AppLib.csproj", "{99BCEBE3-21EB-4964-8386-63B59A492D66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +33,25 @@ Global
 		{A8F70938-F908-44FC-93F7-D26091149904}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8F70938-F908-44FC-93F7-D26091149904}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8F70938-F908-44FC-93F7-D26091149904}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1272FFAD-45BB-492B-960F-42CF6702F3D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1272FFAD-45BB-492B-960F-42CF6702F3D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1272FFAD-45BB-492B-960F-42CF6702F3D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1272FFAD-45BB-492B-960F-42CF6702F3D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD18D470-ADE4-4D51-B1D8-573A0735B8C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD18D470-ADE4-4D51-B1D8-573A0735B8C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD18D470-ADE4-4D51-B1D8-573A0735B8C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD18D470-ADE4-4D51-B1D8-573A0735B8C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99BCEBE3-21EB-4964-8386-63B59A492D66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99BCEBE3-21EB-4964-8386-63B59A492D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99BCEBE3-21EB-4964-8386-63B59A492D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99BCEBE3-21EB-4964-8386-63B59A492D66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0D3799FA-65E0-4CDD-AB3A-A3D4C4A4E36D} = {7A9DEC9B-F5D8-44DE-B29D-96D644E2B432}
+		{CC6DAD1E-9780-4BB0-AA5A-FDB55D7854E3} = {7A9DEC9B-F5D8-44DE-B29D-96D644E2B432}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55769981-1064-467C-B489-86743BFD0878}

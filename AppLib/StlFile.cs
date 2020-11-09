@@ -1,8 +1,8 @@
-﻿namespace App
-{
-    using System.Collections.Generic;
-    using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
+namespace AppLib
+{
     public class StlFile
     {
         public string SolidName { get; set; }
