@@ -86,18 +86,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\ComsolRepository.cs" />
-    <Compile Include="Model\GgenRepository.cs" />
-    <Compile Include="Model\IRepository.cs" />
-    <Compile Include="Model\ModelGeneration.cs" />
-    <Compile Include="Model\NetgenRepository.cs" />
-    <Compile Include="Model\ObjRepository.cs" />
-    <Compile Include="Model\StlModelRepository.cs" />
-    <Compile Include="Model\StlRepository.cs" />
-    <Compile Include="Model\StlTetrahedralRepository.cs" />
-    <Compile Include="Model\StlTriangularRepository.cs" />
-    <Compile Include="Model\TetgenRepository.cs" />
-    <Compile Include="Model\XyzRepository.cs" />
     <Compile Include="FormShow.cs">
       <SubType>Form</SubType>
     </Compile>

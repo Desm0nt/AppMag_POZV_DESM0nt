@@ -64,6 +64,18 @@
     <Compile Include="Layer.cs" />
     <Compile Include="MatExtension.cs" />
     <Compile Include="MCCube.cs" />
+    <Compile Include="Model\ComsolRepository.cs" />
+    <Compile Include="Model\GgenRepository.cs" />
+    <Compile Include="Model\IRepository.cs" />
+    <Compile Include="Model\ModelGeneration.cs" />
+    <Compile Include="Model\NetgenRepository.cs" />
+    <Compile Include="Model\ObjRepository.cs" />
+    <Compile Include="Model\StlModelRepository.cs" />
+    <Compile Include="Model\StlRepository.cs" />
+    <Compile Include="Model\StlTetrahedralRepository.cs" />
+    <Compile Include="Model\StlTriangularRepository.cs" />
+    <Compile Include="Model\TetgenRepository.cs" />
+    <Compile Include="Model\XyzRepository.cs" />
     <Compile Include="MyTriangle.cs" />
     <Compile Include="NewLayer.cs" />
     <Compile Include="PointHolder.cs" />
@@ -76,6 +88,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MeshGenerator\MeshGenerator.csproj">
+      <Project>{A8F70938-F908-44FC-93F7-D26091149904}</Project>
+      <Name>MeshGenerator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

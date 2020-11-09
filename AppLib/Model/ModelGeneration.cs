@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace App.Model
+namespace AppLib.Model
 {
     public class ModelGeneration
     {

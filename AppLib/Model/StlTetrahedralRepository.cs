@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.Model
+namespace AppLib.Model
 {
     /// <summary>
     /// Repository wich works with files in STL format and data with tth list of tetrahedrons

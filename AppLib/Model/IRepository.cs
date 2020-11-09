@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.Model
+namespace AppLib.Model
 {
     /// <summary>
     /// Repository description

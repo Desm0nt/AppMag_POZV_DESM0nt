@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.Model
+namespace AppLib.Model
 {
-    public class XyzRepository<ID> : IRepository<ID, List<Node>>
+    public class ObjRepository<ID> : IRepository<ID, List<Node>>
     {
         public void Create(ID id, List<Node> item)
         {
@@ -18,6 +18,7 @@ namespace App.Model
         {
             throw new NotImplementedException();
         }
+
         public void Delete(ID id)
         {
             throw new NotImplementedException();
@@ -26,7 +27,7 @@ namespace App.Model
         public List<Node> Read(ID id)
         {
             List<Node> nodes = new List<Node>();
-            using (StreamReader reader = new StreamReader($"{id}.xyz"))
+            using (StreamReader reader = new StreamReader($"{id}.obj"))
             {
                 nodes = ReadNodes(reader);
             }
@@ -36,26 +37,21 @@ namespace App.Model
         List<Node> ReadNodes(StreamReader reader)
         {
             List<Node> nodes = new List<Node>();
+            reader.ReadLine();
 
-            string[] lines = reader.ReadToEnd().Split('\r', '\n');
-
-            for (int i = 0; i < lines.Length; i++)
+            string currentLine = "";
+            while (!(currentLine = reader.ReadLine()).StartsWith("v")) ;
+            do
             {
-                if (!lines[i].Equals(""))
-                {
-                    string[] line = lines[i].Split(' ')
-                       .Where(x => x.CompareTo("") != 0)
-                       .Select(s => s.Replace('.', ','))
-                       .ToArray();
+                string[] line = currentLine.Split(' ')
+                   .Where(x => x.CompareTo("") != 0)
+                   .Select(s => s.Replace('.', ','))
+                   .ToArray();
 
-                    Node node = new Node((int)Double.Parse(line[0]), (int)Double.Parse(line[1]), (int)Double.Parse(line[2]))
-                    {
-                        IdMaterial = 1
-                    };
+                Node node = new Node((int)Double.Parse(line[1]), (int)Double.Parse(line[2]), (int)Double.Parse(line[3]));
 
-                    nodes.Add(node);
-                }
-            }
+                nodes.Add(node);
+            } while (!(currentLine = reader.ReadLine()).StartsWith("#"));
             return nodes;
         }
     }

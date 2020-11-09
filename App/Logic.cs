@@ -12,7 +12,7 @@
     using Size = OpenCvSharp.Size;
     using System.Media;
     using System.Globalization;
-    using App.Model;
+    using AppLib.Model;
     using MathNet.Numerics.LinearAlgebra.Double;
     using MeshGenerator.Elements;
     using MeshGenerator.Model;
