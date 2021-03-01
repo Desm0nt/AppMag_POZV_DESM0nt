@@ -52,6 +52,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GlmNet, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GlmNet.0.7.0\lib\net40\GlmNet.dll</HintPath>
+    </Reference>
     <Reference Include="MathNet.Numerics, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.4.7.0\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
@@ -68,8 +71,19 @@
       <HintPath>..\packages\OpenCvSharp3-AnyCPU.4.0.0.20181129\lib\net461\OpenCvSharp.UserInterface.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="SharpGL, Version=3.1.1.0, Culture=neutral, PublicKeyToken=27fc851303210b27, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpGL.3.1.1\lib\net45\SharpGL.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpGL.SceneGraph, Version=3.1.1.0, Culture=neutral, PublicKeyToken=27fc851303210b27, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpGL.SceneGraph.3.1.1\lib\net45\SharpGL.SceneGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpGL.WinForms, Version=3.1.1.0, Culture=neutral, PublicKeyToken=27fc851303210b27, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpGL.WinForms.3.1.1\lib\net45\SharpGL.WinForms.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
@@ -86,10 +100,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomStlReader.cs" />
     <Compile Include="Direction.cs" />
+    <Compile Include="ManifestResourceLoader.cs" />
     <Compile Include="Model\ComsolRepository.cs" />
     <Compile Include="Model\GgenRepository.cs" />
     <Compile Include="Model\IRepository.cs" />
+    <Compile Include="Model\IRepository2.cs" />
     <Compile Include="Model\ModelGeneration.cs" />
     <Compile Include="Model\NetgenRepository.cs" />
     <Compile Include="Model\ObjRepository.cs" />
@@ -115,6 +132,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RColor.cs" />
+    <Compile Include="ResultView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResultView.Designer.cs">
+      <DependentUpon>ResultView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RNormal.cs" />
+    <Compile Include="RVertex.cs" />
     <Compile Include="StlFile.cs" />
     <Compile Include="StlNormal.cs" />
     <Compile Include="StlWriter.cs" />
@@ -143,6 +169,9 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="ResultView.resx">
+      <DependentUpon>ResultView.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -153,6 +182,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Shader.frag" />
+    <EmbeddedResource Include="Shader.vert" />
+    <EmbeddedResource Include="Shader2.frag" />
+    <EmbeddedResource Include="Shader2.vert" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -169,6 +202,10 @@
       <Project>{a8f70938-f908-44fc-93f7-d26091149904}</Project>
       <Name>MeshGenerator</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SharpGL.ico" />
+    <Content Include="SharpGL.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

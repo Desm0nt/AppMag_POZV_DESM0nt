@@ -22,6 +22,7 @@
     using MeshGenerator.Modelling.Solvers;
     using MeshGenerator.Scene;
     using System.Threading.Tasks;
+    using System.Drawing.Imaging;
 
     public partial class Logic : Form
     {
@@ -29,7 +30,9 @@
         private const int VERTEBRA_MATERIAL_ID = 2;
         private const int INNERVERTEBRAL_DISK_MATERIAL_ID = 3;
         private const double STEP_WIDTH = 23.75; // step of the tetraherdral model by width
-        private const double STEP_HEIGHT = 20; // step of the tetraherdral model by height
+        private const double STEP_HEIGHT = 30; // step of the tetraherdral model by height
+
+        string lastname = "";
 
         FeModel model;
         ISolution solution;
@@ -37,6 +40,7 @@
         IRepository<string, List<Tetrahedron>> repository;
         //IRepository<string, List<Triangle>> trnglRepository;
         IRepository<string, List<Tetrahedron>> tetrahedralRepository;
+        IRepository2<string, List<MeshGenerator.Elements.Triangle>, List<Node>> trinagleRepository;
 
         ILoad load;
         IBoundaryCondition conditions;
@@ -64,6 +68,7 @@
             _glRotateAngleIncriment = 5.0f;
             _layers = new List<Layer>();
             _triangles = new List<MyTriangle>();
+            button2.Enabled = true;
         }
 
         /// <summary>
@@ -115,14 +120,20 @@
             var depth =_layers[0].Dicom.pixelDepth;
             var space=_layers[0].Dicom.pixeSpace;
             var t = MCCube.getTriangles(volume);
-
-            for(int k=0; k<t.Count-2;k+=3)
-                _triangles.Add(new MyTriangle(t[k],t[k+1],t[k+2]));
+            int koeff = 18;
+            for (int k = 0; k < t.Count - 2; k += 3)
+            {
+                var trg = new MyTriangle(t[k], t[k + 1], t[k + 2]);
+                Vertex vrt1 = new Vertex(t[k].X * koeff, t[k].Z * koeff, t[k].Y * koeff);
+                Vertex vrt2 = new Vertex(t[k + 1].X * koeff, t[k + 1].Z * koeff, t[k + 1].Y * koeff);
+                Vertex vrt3 = new Vertex(t[k + 2].X * koeff, t[k + 2].Z * koeff, t[k + 2].Y * koeff);
+                var trg2 = new MyTriangle(vrt1, vrt2, vrt3);
+                _triangles.Add(trg2);
+            }
 
             SystemSounds.Beep.Play();
             MessageBox.Show("Done!!!");
             toolStripStatusLabel1.Text = @"Реконструкция 3D модели позвонка завершена. Число треугольников:" + _triangles.Count.ToString();
-
 
             Stream myStream = new FileStream(@"Stl\Vertebras\st1\L1.stl", FileMode.Create);
             StlFile stl = new StlFile
@@ -189,46 +200,95 @@
         {
             //Декодирование Dicom файла
             DicomDecoder dicom = new DicomDecoder {DicomFileName = file};
-            var filepath = Path.GetDirectoryName(file);
-            var filename = Path.GetFileNameWithoutExtension(file);
-            Bitmap bitmap = new Bitmap(filepath + "\\jpg\\" + filename +".jpg");
-
-            Mat segmentJpg = OpenCvSharp.Extensions.BitmapConverter.ToMat(bitmap);
 
             //Усредняющий фильтр
             dicom.Pixels16 = AveragingFilter(dicom.Pixels16Origin, dicom.width, dicom.height, 5);
 
             //Сегментация
-            Mat origin = Mat.Zeros(new Size(dicom.width, dicom.height), MatType.CV_16UC1);
-            Mat segment = Mat.Zeros(new Size(dicom.width, dicom.height), MatType.CV_16UC1);
-            Mat laplace = Mat.Zeros(new Size(dicom.width, dicom.height), MatType.CV_16UC1);
-            for (int w = 0; w < dicom.width; ++w)
-            {
-                for (int h = 0; h < dicom.height; ++h)
-                {
-                    segment.Set(w, h, dicom.Pixels16[w*dicom.height + h] >= 32900 ? (ushort) 40000 : (ushort) 10);
-                    origin.Set(w, h, dicom.Pixels16[w*dicom.height + h]);
-                }
-            }
+            //Mat origin = Mat.Zeros(new Size(dicom.width, dicom.height), MatType.CV_16UC1);
+            //Mat segment = Mat.Zeros(new Size(dicom.width, dicom.height), MatType.CV_16UC1);
+            //Mat laplace = Mat.Zeros(new Size(dicom.width, dicom.height), MatType.CV_16UC1);
+            //for (int w = 0; w < dicom.width; ++w)
+            //{
+            //    for (int h = 0; h < dicom.height; ++h)
+            //    {
+            //        segment.Set(w, h, dicom.Pixels16[w*dicom.height + h] >= 32900 ? (ushort) 40000 : (ushort) 10);
+            //        origin.Set(w, h, dicom.Pixels16[w*dicom.height + h]);
+            //    }
+            //}
 
             //Обработка изображения оператором Лапласа
             //Cv2.Laplacian(segment, laplace, MatType.CV_16UC1);
 
+            GenImage(file, dicom);
+
+            var filepath = Path.GetDirectoryName(file);
+            var filename = Path.GetFileNameWithoutExtension(file);
+            Bitmap bitmap = new Bitmap(filepath + "\\png\\" + filename + ".png");
+
+            Mat segmentJpg = OpenCvSharp.Extensions.BitmapConverter.ToMat(bitmap);
             //Создание слоя
             return new Layer
             {
                 Dicom = dicom, //Данные, полученные из Dicom файла
                 //InstanceNumber = dicom.InstanceNumber,
                 //SeriesNumber = dicom.SeriesNumber,
-                Origin = origin, //Оригинальное изображение 
-                SegmentMatrix = segment, //Сегментированное изображение
+                //Origin = origin, //Оригинальное изображение 
+                //SegmentMatrix = segment, //Сегментированное изображение
                 SegmentMatrixJpg = segmentJpg,
                 ImageFromJpg = bitmap
                 //LaplaceMatrix = laplace //Контурное изображение
             };
+
         }
 
-      
+        private void GenImage(string path, DicomDecoder dicom)
+        {
+
+            _formShow = new FormShow();
+            var drawArea = new Bitmap(_formShow.pictureBox1.Size.Width, _formShow.pictureBox1.Size.Height,
+                System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            //_formShow.pictureBox1.Image = drawArea;
+
+            int index = 0;
+            string pathtext = path;
+            _currentIndexlayer = index;
+            Graphics g;
+            g = Graphics.FromImage(drawArea);
+
+            Brush gBrush = Brushes.White;
+            Brush wBrush = Brushes.Black;
+
+            for (int w = 0; w < dicom.width; ++w)
+            {
+                for (int h = 0; h < dicom.height; ++h)
+                {
+                    g.FillRectangle(
+                        dicom.Pixels16[w * dicom.height + h] >= 32900 ? gBrush : wBrush,
+                        h, w, 1, 1);
+                }
+            }
+
+            int a = 8;
+            _formShow.Text = dicom.DicomFileName;
+            //_formShow.pictureBox1.Image = drawArea;
+            var filepath = Path.GetDirectoryName(pathtext);
+            var filename = Path.GetFileNameWithoutExtension(pathtext);
+            //Bitmap bitmap = new Bitmap(filepath + "\\jpg\\" + filename + ".jpg");
+            var resized = ResizeBitmap(drawArea, drawArea.Width / a, drawArea.Height / a);
+            Directory.CreateDirectory(filepath + "\\png\\");
+            resized.Save(filepath + "\\png\\" + filename + ".png", ImageFormat.Png);
+            g.Dispose();
+
+        }
+
+        private static Bitmap ResizeBitmap(Bitmap sourceBMP, int width, int height)
+        {
+            Bitmap result = new Bitmap(width, height);
+            using (Graphics g = Graphics.FromImage(result))
+                g.DrawImage(sourceBMP, 0, 0, width, height);
+            return result;
+        }
 
         /// <summary>
         /// Открытие 1-ого Dicom файла
@@ -276,9 +336,9 @@
                     toolStripProgressBar1.Value = (int)((currentPosition / (decimal)length) * 100);
                     currentPosition++;
                     _layers.Add(GetLayer(file));
-                    UpdateListBox();
                     Refresh();
                 }
+                UpdateListBox();
                 toolStripStatusLabel1.Text = @"Загрузка КТ изображений завершена.";
                 groupBox2.Enabled = true;
                 Refresh();
@@ -300,12 +360,13 @@
                 _formShow.pictureBox1.Image = drawArea;
 
                 int index = listBox1.IndexFromPoint(e.Location);
+                string pathtext = listBox1.GetItemText(listBox1.SelectedItem);
                 _currentIndexlayer = index;
                 Graphics g;
                 g = Graphics.FromImage(drawArea);
 
-                Brush gBrush = Brushes.Gray;
-                Brush wBrush = Brushes.White;
+                Brush gBrush = Brushes.White;
+                Brush wBrush = Brushes.Black;
 
                 for (int w = 0; w < _layers[index].Dicom.width; ++w)
                 {
@@ -319,6 +380,7 @@
 
                 _formShow.Text = _layers[index].Dicom.DicomFileName;
                 _formShow.pictureBox1.Image = drawArea;
+                drawArea.Save(pathtext + ".jpg", ImageFormat.Jpeg);
                 g.Dispose();
                 _formShow.Show();
             }
@@ -330,6 +392,49 @@
                 UpdateListBox();
             }
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            int i = 0;
+            foreach (var a in listBox1.Items)
+            {
+                _formShow = new FormShow();
+                var drawArea = new Bitmap(_formShow.pictureBox1.Size.Width, _formShow.pictureBox1.Size.Height,
+                    System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                //_formShow.pictureBox1.Image = drawArea;
+
+                int index = i;
+                string pathtext = listBox1.GetItemText(a);
+                _currentIndexlayer = index;
+                Graphics g;
+                g = Graphics.FromImage(drawArea);
+
+                Brush gBrush = Brushes.White;
+                Brush wBrush = Brushes.Black;
+
+                for (int w = 0; w < _layers[index].Dicom.width; ++w)
+                {
+                    for (int h = 0; h < _layers[index].Dicom.height; ++h)
+                    {
+                        g.FillRectangle(
+                            _layers[index].Dicom.Pixels16[w * _layers[index].Dicom.height + h] >= 32900 ? gBrush : wBrush,
+                            h, w, 1, 1);
+                    }
+                }
+
+                _formShow.Text = _layers[index].Dicom.DicomFileName;
+                //_formShow.pictureBox1.Image = drawArea;
+                var filepath = Path.GetDirectoryName(pathtext);
+                var filename = Path.GetFileNameWithoutExtension(pathtext);
+                Bitmap bitmap = new Bitmap(filepath + "\\jpg\\" + filename + ".jpg");
+                drawArea.Save(filepath + "\\jpg\\" + filename + ".jpg", ImageFormat.Jpeg);
+                g.Dispose();
+                i++;
+            }
+
+        }
+
+
 
         /// <summary>
         /// Обновление списка ListBox
@@ -557,6 +662,7 @@
             load = new Force(SelectedSide.TOP, forceValue, true, model.Nodes, height / 18.0);
             conditions = new VolumeBoundaryCondition(SelectedSide.BOTTOM, model.Nodes, height / 20.0);
             //conditions = new VolumeBoundaryCondition(SelectedSide.BOTTOM, new Node((int)avX, (int)avY, minZ), model.Triangles);
+            tetrahedralRepository.Create(model.Id + "in", model.Tetrahedrons);
 
             int concentratedIndex = load.LoadVectors.FirstOrDefault().Key;
             int step = (int)(STEP_HEIGHT / 4.0);
@@ -576,7 +682,6 @@
                 load.LoadVectors.Add(concentratedIndex, vector);
             }
 
-            tetrahedralRepository.Create(model.Id + "in", model.Tetrahedrons);
             //trnglRepository.Create(model.Id + "in", model.Triangles);
             //trnglRepository.Create(model.Id + "load", ((Force)load).LoadedTriangles);
             //trnglRepository.Create(model.Id + "fix", ((VolumeBoundaryCondition)conditions).FixedTriangles);
@@ -620,12 +725,31 @@
             TotalEpure(model.Nodes, solution.Results, "TotalEpureSpine");
 
             List<Tetrahedron> outList = ApplyResultsToTetrahedrons(results);
+            List<Node> nodlist = ApplyResultsToGenList(results);
             tetrahedralRepository.Create(model.Id + "out", outList);
             tetrahedralRepository.Create2(model.Id + "out2", outList);
+            trinagleRepository.Create2(model.Id + "out3", myvertebra, nodlist);
+
+            lastname = model.Id + "out3.stl";
 
             MessageBox.Show($"Total time solving SLAE: {endSolve.TotalSeconds} sec.");
 
-            Process.Start("notepad.exe", "results.txt");
+            //Process.Start("notepad.exe", "results.txt");
+        }
+
+        private List<Node> ApplyResultsToGenList(double[] results)
+        {
+            string workpath = Environment.CurrentDirectory;
+            List<Node> nodlist = new List<Node>();
+
+            nodlist = model.Nodes;
+            nodlist.ForEach(n =>
+            {
+                double z = Math.Abs(solution.Results[n.GlobalIndex * 3 + 2]);
+                n.DefColor = z;
+            });
+
+            return nodlist;
         }
 
         /// <summary>
@@ -928,6 +1052,23 @@
                     writer.WriteLine("|{0, 25:f20}|{1, 25:f20}|{2, 25:f20}|", results[i * DEGREES_OF_FREEDOM], results[i * DEGREES_OF_FREEDOM + 1], results[i * DEGREES_OF_FREEDOM + 2]);
                 }
             }
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string aaa = lastname;
+            ResultView resultView = new ResultView(aaa);
+            resultView.Show();
         }
 
         private double Distance(Node first, Node second)

@@ -43,7 +43,7 @@ namespace App.Model
                         Node first = ReadVertex(sr.ReadLine());
                         Node second = ReadVertex(sr.ReadLine());
                         Node third = ReadVertex(sr.ReadLine());
-                        
+
                         triangles.Add(new Triangle(first, second, third));
                     }
                 }
@@ -102,8 +102,8 @@ namespace App.Model
                 sw.WriteLine("    outer loop");
                 foreach (var node in triangle.Nodes)
                 {
-                    //sw.WriteLine($"      vertex {node.PX+700} {node.PY} {node.PZ} {node.DefColor} ");
-                    sw.WriteLine($"      vertex {(node.X+700).ToString().Replace(',', '.') } {node.Y.ToString().Replace(',', '.')} {node.Z.ToString().Replace(',', '.')} {node.DefColor}");
+                    //sw.WriteLine($"      vertex {node.PX + 700} {node.PY} {node.PZ} {node.DefColor} ");
+                    sw.WriteLine($"      vertex {(node.X).ToString().Replace(',', '.') } {node.Y.ToString().Replace(',', '.')} {node.Z.ToString().Replace(',', '.')} {node.DefColor}");
                 }
                 sw.WriteLine("    endloop");
                 sw.WriteLine("  endfacet");
