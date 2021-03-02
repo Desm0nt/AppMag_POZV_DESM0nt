@@ -7,11 +7,11 @@ namespace App
     {
         public DicomDecoder Dicom { get; set; }
 
-        public Mat Origin { get; set; }
+        //public Mat Origin { get; set; }
 
-        public Mat SegmentMatrix { get; set; }
+       // public Mat SegmentMatrix { get; set; }
 
-        public Mat SegmentMatrixJpg { get; set; }
+        //public Mat SegmentMatrixJpg { get; set; }
 
         public Bitmap ImageFromJpg { get; set; }
 

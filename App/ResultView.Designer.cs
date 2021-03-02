@@ -38,7 +38,6 @@ namespace App
             this.right = new System.Windows.Forms.Button();
             this.left = new System.Windows.Forms.Button();
             this.up = new System.Windows.Forms.Button();
-            this.Close = new System.Windows.Forms.Button();
             this.Far = new System.Windows.Forms.Button();
             this.btn3 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
@@ -59,7 +58,9 @@ namespace App
             // 
             // sceneControl1
             // 
-            this.sceneControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sceneControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.sceneControl1.DrawFPS = true;
             this.sceneControl1.FrameRate = 10;
             this.sceneControl1.Location = new System.Drawing.Point(0, 0);
@@ -86,7 +87,6 @@ namespace App
             this.panel2.Controls.Add(this.right);
             this.panel2.Controls.Add(this.left);
             this.panel2.Controls.Add(this.up);
-            this.panel2.Controls.Add(this.Close);
             this.panel2.Controls.Add(this.Far);
             this.panel2.Controls.Add(this.btn3);
             this.panel2.Location = new System.Drawing.Point(612, 3);
@@ -153,16 +153,7 @@ namespace App
             this.up.Text = "up";
             this.up.UseVisualStyleBackColor = true;
             this.up.Click += new System.EventHandler(this.up_Click);
-            // 
-            // Close
-            // 
-            this.Close.Location = new System.Drawing.Point(137, 178);
-            this.Close.Name = "Close";
-            this.Close.Size = new System.Drawing.Size(52, 39);
-            this.Close.TabIndex = 2;
-            this.Close.Text = "+";
-            this.Close.UseVisualStyleBackColor = true;
-            this.Close.Click += new System.EventHandler(this.Close_Click);
+
             // 
             // Far
             // 
@@ -212,7 +203,6 @@ namespace App
         private System.Windows.Forms.Button right;
         private System.Windows.Forms.Button left;
         private System.Windows.Forms.Button up;
-        private System.Windows.Forms.Button Close;
         private System.Windows.Forms.Button Far;
         private System.Windows.Forms.Button btn3;
     }

@@ -21,17 +21,10 @@ namespace App
     public partial class ResultView : Form
     {
         private StreamReader Reader { get; set; }
-        private float corr = 0;
         float rotateX = 0, rotateY = 0;
         float Dstnc = -5.0f;
         float UpDn = 0.0f;
         float LfRt = 0.0f;
-        float eyex = 0;
-        float eyey = 0;
-        float eyez = 2;
-        float rx = 0.3f;
-        float ry = 0.3f;
-        float rz = 0f;
         private bool key = false;
         private bool kei = false;
         float prevX = 0, prevY = 0;
@@ -43,7 +36,6 @@ namespace App
         mat4 projectionMatrix;
         mat4 viewMatrix;
         mat4 modelMatrix;
-        mat4 modelMatrix2;
         mat4 modelviewMatrix = mat4.identity();
         private mat3 normalMatrix = mat3.identity();
 
@@ -75,8 +67,8 @@ namespace App
         {
             InitializeComponent();
             //workpath = Environment.CurrentDirectory + "\\" + "images" + "\\" + value + "\\Calc_File_out2.stl";
-            workpath = @"e:\123\AppMag\App\bin\Debug\" + value;
-            //workpath = @"e:\123\AppMag\App\bin\Debug\2d58fcf4-532f-42f5-b863-f5019c9e4fe5out2.stl";
+            //workpath = @"e:\123\AppMag\App\bin\Debug\" + value;
+            workpath = @"e:\123\AppMag\App\bin\Debug\a83287f8-e5bc-4eb3-910c-c86368e63332out3.stl";
         }
 
         #region Buttons

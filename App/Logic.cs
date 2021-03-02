@@ -23,6 +23,11 @@
     using MeshGenerator.Scene;
     using System.Threading.Tasks;
     using System.Drawing.Imaging;
+    using STL_Tools;
+    using OpenTK.Graphics.OpenGL;
+    using BatuGL;
+    using Mouse_Orbit;
+
 
     public partial class Logic : Form
     {
@@ -37,7 +42,6 @@
         FeModel model;
         ISolution solution;
         ISolve<SparseMatrix> solver;
-        IRepository<string, List<Tetrahedron>> repository;
         //IRepository<string, List<Triangle>> trnglRepository;
         IRepository<string, List<Tetrahedron>> tetrahedralRepository;
         IRepository2<string, List<MeshGenerator.Elements.Triangle>, List<Node>> trinagleRepository;
@@ -47,27 +51,31 @@
 
         double forceValue = 1;
 
-
+        bool monitorLoaded = false;
+        bool moveForm = false;
+        int moveOffsetX = 0;
+        int moveOffsetY = 0;
+        Batu_GL.VAO_TRIANGLES modelVAO = null; // 3d model vertex array object
+        private Orbiter orb;
+        Vector3 minPos = new Vector3();
+        Vector3 maxPos = new Vector3();
 
         private int _currentIndexlayer; //Индекс выбранного слоя из списка
         private readonly List<Layer> _layers; //Список слоев
         private FormShow _formShow; //Форма для просмотра двумерных слоев
         private List<MyTriangle> _triangles;
-        private float _glZoom; //Текущий зум
-        private readonly float _glZoomIncriment; //5.0f; //Инкремент зума
-        private readonly float _glRotateAngleIncriment; //Инкремент угла поворота
-        private float _rotX, _rotY, _rotZ; //Значение углов поворота вокруг осей X,Y,Z
-
         public Logic()
         {
             InitializeComponent();
-            panelOpenGl.InitializeContexts();
+            //panelOpenGl.InitializeContexts();
             _currentIndexlayer = -1;
-            _glZoom = -1300.0f;
-            _glZoomIncriment = 50.0f;
-            _glRotateAngleIncriment = 5.0f;
             _layers = new List<Layer>();
             _triangles = new List<MyTriangle>();
+            orb = new Orbiter();
+            GL_Monitor.MouseDown += orb.Control_MouseDownEvent;
+            GL_Monitor.MouseUp += orb.Control_MouseUpEvent;
+            GL_Monitor.MouseWheel += orb.Control_MouseWheelEvent;
+            GL_Monitor.KeyPress += orb.Control_KeyPress_Event;
             button2.Enabled = true;
         }
 
@@ -78,26 +86,7 @@
         /// <param name="e"></param>
         private void Logic_Load(object sender, EventArgs e)
         {
-            Gl.glShadeModel(Gl.GL_SMOOTH); // Enable Smooth Shading
-            Gl.glClearColor(0, 0, 0, 0.5f); // Black Background
-            Gl.glClearDepth(1); // Depth Buffer Setup
-            Gl.glEnable(Gl.GL_DEPTH_TEST); // Enables Depth Testing
-            Gl.glDepthFunc(Gl.GL_LEQUAL); // The Type Of Depth Testing To Do
-            Gl.glHint(Gl.GL_PERSPECTIVE_CORRECTION_HINT, Gl.GL_NICEST); // Really Nice Perspective Calculations
-
-            // устанавливаем цвет очистки окна 
-            Gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
-
-            // устанавливаем порт вывода, основываясь на размерах элемента управления AnT 
-            Gl.glViewport(0, 0, panelOpenGl.Width, panelOpenGl.Height);
-
-            // Reset The Current Viewport
-            Gl.glMatrixMode(Gl.GL_PROJECTION); // Select The Projection Matrix
-            Gl.glLoadIdentity(); // Reset The Projection Matrix
-            //Glu.gluPerspective(45, panelOpenGl.Width / (double)panelOpenGl.Height, 0.1, 100);          // Calculate The Aspect Ratio Of The Window
-            Glu.gluPerspective(45, panelOpenGl.Width / (double)panelOpenGl.Height, 0.1, 0);
-            Gl.glMatrixMode(Gl.GL_MODELVIEW); // Select The Modelview Matrix
-            Gl.glLoadIdentity();
+            Batu_GL.Configure(GL_Monitor, Batu_GL.Ortho_Mode.CENTER);
         }
 
         #region InitMeshGeneration
@@ -124,9 +113,9 @@
             for (int k = 0; k < t.Count - 2; k += 3)
             {
                 var trg = new MyTriangle(t[k], t[k + 1], t[k + 2]);
-                Vertex vrt1 = new Vertex(t[k].X * koeff, t[k].Z * koeff, t[k].Y * koeff);
-                Vertex vrt2 = new Vertex(t[k + 1].X * koeff, t[k + 1].Z * koeff, t[k + 1].Y * koeff);
-                Vertex vrt3 = new Vertex(t[k + 2].X * koeff, t[k + 2].Z * koeff, t[k + 2].Y * koeff);
+                Vertex vrt1 = new Vertex(t[k].X * koeff, t[k].Z * koeff * (-1), t[k].Y * koeff);
+                Vertex vrt2 = new Vertex(t[k + 1].X * koeff, t[k + 1].Z * koeff * (-1), t[k + 1].Y * koeff);
+                Vertex vrt3 = new Vertex(t[k + 2].X * koeff, t[k + 2].Z * koeff * (-1), t[k + 2].Y * koeff);
                 var trg2 = new MyTriangle(vrt1, vrt2, vrt3);
                 _triangles.Add(trg2);
             }
@@ -204,40 +193,17 @@
             //Усредняющий фильтр
             dicom.Pixels16 = AveragingFilter(dicom.Pixels16Origin, dicom.width, dicom.height, 5);
 
-            //Сегментация
-            //Mat origin = Mat.Zeros(new Size(dicom.width, dicom.height), MatType.CV_16UC1);
-            //Mat segment = Mat.Zeros(new Size(dicom.width, dicom.height), MatType.CV_16UC1);
-            //Mat laplace = Mat.Zeros(new Size(dicom.width, dicom.height), MatType.CV_16UC1);
-            //for (int w = 0; w < dicom.width; ++w)
-            //{
-            //    for (int h = 0; h < dicom.height; ++h)
-            //    {
-            //        segment.Set(w, h, dicom.Pixels16[w*dicom.height + h] >= 32900 ? (ushort) 40000 : (ushort) 10);
-            //        origin.Set(w, h, dicom.Pixels16[w*dicom.height + h]);
-            //    }
-            //}
-
-            //Обработка изображения оператором Лапласа
-            //Cv2.Laplacian(segment, laplace, MatType.CV_16UC1);
-
             GenImage(file, dicom);
 
             var filepath = Path.GetDirectoryName(file);
             var filename = Path.GetFileNameWithoutExtension(file);
             Bitmap bitmap = new Bitmap(filepath + "\\png\\" + filename + ".png");
 
-            Mat segmentJpg = OpenCvSharp.Extensions.BitmapConverter.ToMat(bitmap);
             //Создание слоя
             return new Layer
             {
                 Dicom = dicom, //Данные, полученные из Dicom файла
-                //InstanceNumber = dicom.InstanceNumber,
-                //SeriesNumber = dicom.SeriesNumber,
-                //Origin = origin, //Оригинальное изображение 
-                //SegmentMatrix = segment, //Сегментированное изображение
-                SegmentMatrixJpg = segmentJpg,
                 ImageFromJpg = bitmap
-                //LaplaceMatrix = laplace //Контурное изображение
             };
 
         }
@@ -329,7 +295,6 @@
                 int currentPosition = 1;
                 var length = Directory.GetFiles(folderBrowserDialog1.SelectedPath).Length;
                 toolStripStatusLabel1.Text = @"Загрузка КТ изображений...";
-                Refresh();
                 foreach (string file in Directory.GetFiles(folderBrowserDialog1.SelectedPath))
                 {
                     toolStripStatusLabel1.Text = @"Загрузка " + file;
@@ -452,103 +417,139 @@
 
         #region Visualization 
 
-        /// <summary>
-        /// Отрисовка треугольника
-        /// </summary>
-        /// <param name="triangle">Треугольник</param>
-        private void DrawTriangle(MyTriangle triangle)
+        private void DrawTimer_Tick(object sender, EventArgs e)
         {
-            Gl.glColor3f(0.1f, 0.1f, 0.1f);
-            Gl.glVertex3f(triangle.Vertex1.X, triangle.Vertex1.Y, triangle.Vertex1.Z);
-
-            Gl.glColor3f(0.55f, 0.55f, 0.55f);
-            Gl.glVertex3f(triangle.Vertex2.X, triangle.Vertex2.Y, triangle.Vertex2.Z);
-
-            Gl.glColor3f(0.85f, 0.85f, 0.85f);
-            Gl.glVertex3f(triangle.Vertex3.X, triangle.Vertex3.Y, triangle.Vertex3.Z);
-        }
-
-        /// <summary>
-        /// Метод отрисовки
-        /// </summary>
-        private void Render2()
-        {
-            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT); // Clear Screen And Depth Buffer
-            Gl.glLoadIdentity();
-            Gl.glTranslatef(0.0f, 0, _glZoom);
-            Gl.glRotatef(_rotX, 1, 0, 0);
-            Gl.glRotatef(_rotY, 0, 1, 0);
-            Gl.glRotatef(_rotZ, 0, 0, 1);
-
-            //cam.Look();
-            //GL_FRONT_AND_BACK
-
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glColor3f(1.0f, 0.0f, 0.0f);
-            Gl.glVertex3f(0, 0, 0);
-            Gl.glVertex3f(10000, 0, 0);
-            Gl.glColor3f(0.0f, 1.0f, 0.0f);
-            Gl.glVertex3f(0, 0, 0);
-            Gl.glVertex3f(0, 10000, 0);
-            Gl.glColor3f(0.0f, 0.0f, 1.0f);
-            Gl.glVertex3f(0, 0, 0);
-            Gl.glVertex3f(0, 0, 10000);
-            Gl.glEnd();
-
-            Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL);
-
-            Gl.glBegin(Gl.GL_TRIANGLES);
-            foreach (var t in _triangles)
+            orb.UpdateOrbiter(MousePosition.X, MousePosition.Y);
+            GL_Monitor.Invalidate();
+            if (moveForm)
             {
-                DrawTriangle(t);
+                this.SetDesktopLocation(MousePosition.X - moveOffsetX, MousePosition.Y - moveOffsetY);
             }
-            Gl.glEnd();
-            Gl.glFlush();
-            panelOpenGl.Invalidate();
         }
 
-        /// <summary>
-        /// Увеличение зума
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Btn_zoom_plus_Click(object sender, EventArgs e)
+        private void GL_Monitor_Load(object sender, EventArgs e)
         {
-            ZoomMethod(true);
+            GL_Monitor.AllowDrop = true;
+            monitorLoaded = true;
+            GL.ClearColor(Color.Black);
         }
 
-        /// <summary>
-        /// Уменьшение зума
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Btn_zoom_minus_Click(object sender, EventArgs e)
+        private void ConfigureBasicLighting(Color modelColor)
         {
-            ZoomMethod(false);
+            float[] light_1 = new float[] {
+            0.2f * modelColor.R / 255.0f,
+            0.2f * modelColor.G / 255.0f,
+            0.2f * modelColor.B / 255.0f,
+            1.0f };
+            float[] light_2 = new float[] {
+            3.0f * modelColor.R / 255.0f,
+            3.0f * modelColor.G / 255.0f,
+            3.0f * modelColor.B / 255.0f,
+            1.0f };
+            float[] specref = new float[] {
+                0.01f * modelColor.R / 255.0f,
+                0.01f * modelColor.G / 255.0f,
+                0.01f * modelColor.B / 255.0f,
+                1.0f };
+            float[] specular_0 = new float[] { -1.0f, -1.0f, 1.0f, 1.0f };
+            float[] specular_1 = new float[] { 1.0f, -1.0f, 1.0f, 1.0f };
+            float[] lightPos_0 = new float[] { 1000f, 1000f, -200.0f, 1.0f };
+            float[] lightPos_1 = new float[] { -1000f, 1000f, -200.0f, 1.0f };
+
+            GL.Enable(EnableCap.Lighting);
+            /* light 0 */
+            GL.Light(LightName.Light0, LightParameter.Ambient, light_1);
+            GL.Light(LightName.Light0, LightParameter.Diffuse, light_2);
+            GL.Light(LightName.Light0, LightParameter.Specular, specular_0);
+            GL.Light(LightName.Light0, LightParameter.Position, lightPos_0);
+            GL.Enable(EnableCap.Light0);
+            /* light 1 */
+            GL.Light(LightName.Light1, LightParameter.Ambient, light_1);
+            GL.Light(LightName.Light1, LightParameter.Diffuse, light_2);
+            GL.Light(LightName.Light1, LightParameter.Specular, specular_1);
+            GL.Light(LightName.Light1, LightParameter.Position, lightPos_1);
+            GL.Enable(EnableCap.Light1);
+            /*material settings  */
+            GL.Enable(EnableCap.ColorMaterial);
+            GL.ColorMaterial(MaterialFace.Front, ColorMaterialParameter.AmbientAndDiffuse);
+            GL.Material(MaterialFace.Front, MaterialParameter.Specular, specref);
+            GL.Material(MaterialFace.Front, MaterialParameter.Shininess, 10);
+            GL.Enable(EnableCap.Normalize);
         }
 
-        /// <summary>
-        /// Метод изменения зума
-        /// </summary>
-        /// <param name="isAdd"></param>
-        private void ZoomMethod(bool isAdd)
+        private void GL_Monitor_Paint(object sender, PaintEventArgs e)
         {
-            if (isAdd)
-                _glZoom += _glZoomIncriment;
-            else
-                _glZoom -= _glZoomIncriment;
+            if (!monitorLoaded)
+                return;
+
+            Batu_GL.Configure(GL_Monitor, Batu_GL.Ortho_Mode.CENTER);
+            if (modelVAO != null) ConfigureBasicLighting(modelVAO.color);
+            GL.Translate(orb.PanX, orb.PanY, 0);
+            GL.Rotate(orb.orbitStr.angle, orb.orbitStr.ox, orb.orbitStr.oy, orb.orbitStr.oz);
+            GL.Scale(orb.scaleVal, orb.scaleVal, orb.scaleVal);
+            GL.Translate(-minPos.x, -minPos.y, -minPos.z);
+            GL.Translate(-(maxPos.x - minPos.x) / 2.0f, -(maxPos.y - minPos.y) / 2.0f, -(maxPos.z - minPos.z) / 2.0f);
+            if (modelVAO != null) modelVAO.Draw();
+
+            GL_Monitor.SwapBuffers();
         }
 
-        /// <summary>
-        /// Отрисовка по таймеру
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RenderTimer_Tick(object sender, EventArgs e)
+        private void ReadSelectedFile(string fileName)
         {
-            //Render();
-            Render2();
+            STLReader stlReader = new STLReader(fileName);
+            TriangleMesh[] meshArray = stlReader.ReadFile();
+            modelVAO = new Batu_GL.VAO_TRIANGLES();
+            modelVAO.parameterArray = STLExport.Get_Mesh_Vertices(meshArray);
+            modelVAO.normalArray = STLExport.Get_Mesh_Normals(meshArray);
+            modelVAO.color = Color.Beige;
+            minPos = stlReader.GetMinMeshPosition(meshArray);
+            maxPos = stlReader.GetMaxMeshPosition(meshArray);
+            orb.Reset_Orientation();
+            orb.Reset_Pan();
+            orb.Reset_Scale();
+            if (stlReader.Get_Process_Error())
+            {
+                modelVAO = null;
+                /* if there is an error, deinitialize the gl monitor to clear the screen */
+                Batu_GL.Configure(GL_Monitor, Batu_GL.Ortho_Mode.CENTER);
+                GL_Monitor.SwapBuffers();
+            }
         }
+
+        private void GL_Monitor_DragDrop(object sender, DragEventArgs e)
+        {
+            var data = e.Data.GetData(DataFormats.FileDrop);
+            if (data != null)
+            {
+                string[] fileNames = data as string[];
+                string ext = System.IO.Path.GetExtension(fileNames[0]);
+                if (fileNames.Length > 0 && (ext == ".stl" || ext == ".STL" || ext == ".txt" || ext == ".TXT"))
+                {
+                    ReadSelectedFile(fileNames[0]);
+                }
+            }
+        }
+
+        private void GL_Monitor_DragEnter(object sender, DragEventArgs e)
+        {
+            // if the extension is not *.txt or *.stl change drag drop effect symbol
+            var data = e.Data.GetData(DataFormats.FileDrop);
+            if (data != null)
+            {
+                string[] fileNames = data as string[];
+                string ext = System.IO.Path.GetExtension(fileNames[0]);
+                if (ext == ".stl" || ext == ".STL" || ext == ".txt" || ext == ".TXT")
+                {
+                    e.Effect = DragDropEffects.Copy;
+                }
+                else
+                {
+                    e.Effect = DragDropEffects.None;
+                }
+            }
+        }
+
+
 
         /// <summary>
         /// Запуск рендеринга
@@ -557,16 +558,7 @@
         /// <param name="e"></param>
         private void Btn_render_start_Click(object sender, EventArgs e)
         {
-            btn_zoom_plus.Enabled = true;
-            btn_zoom_minus.Enabled = true;
-            btn_rotate_plus.Enabled = true;
-            btn_rotate_minus.Enabled = true;
-
-            cb_X.Enabled = true;
-            cb_Y.Enabled = true;
-            cb_Z.Enabled = true;
-            renderTimer.Start();
-
+            ReadSelectedFile(Environment.CurrentDirectory +@"\Stl\Vertebras\st1\L1.stl");
         }
 
         /// <summary>
@@ -576,36 +568,18 @@
         /// <param name="e"></param>
         private void Btn_render_stop_Click(object sender, EventArgs e)
         {
-            btn_zoom_plus.Enabled = false;
-            btn_zoom_minus.Enabled = false;
-            btn_rotate_plus.Enabled = false;
-            btn_rotate_minus.Enabled = false;
-
-            cb_X.Enabled = false;
-            cb_Y.Enabled = false;
-            cb_Z.Enabled = false;
-            renderTimer.Stop();
+            modelVAO = null;
+            /* if there is an error, deinitialize the gl monitor to clear the screen */
+            Batu_GL.Configure(GL_Monitor, Batu_GL.Ortho_Mode.CENTER);
+            GL_Monitor.SwapBuffers();
         }
-
-        /// <summary>
-        /// Поворот по часовой стрелке
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Btn_rotate_plus_Click(object sender, EventArgs e)
-        {
-            if (cb_X.Checked)
-                _rotX += _glRotateAngleIncriment;
-            if (cb_Y.Checked)
-                _rotY += _glRotateAngleIncriment;
-            if (cb_Z.Checked)
-                _rotZ += _glRotateAngleIncriment;
-        }
+        #endregion
 
         private void Button2_Click(object sender, EventArgs e)
         {
             //trnglRepository = new StlTriangularRepository<string>();
             tetrahedralRepository = new StlTetrahedralRepository<string>();
+            trinagleRepository = new StlTriangularRepository2<string>();
 
             List<List<Triangle>> vertebras = new List<List<Triangle>>();
             List<Triangle> myvertebra = new List<Triangle>();
@@ -736,7 +710,6 @@
 
             //Process.Start("notepad.exe", "results.txt");
         }
-
         private List<Node> ApplyResultsToGenList(double[] results)
         {
             string workpath = Environment.CurrentDirectory;
@@ -752,22 +725,6 @@
             return nodlist;
         }
 
-        /// <summary>
-        /// Поворот против часовой стрелке
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Btn_rotate_minus_Click(object sender, EventArgs e)
-        {
-            if (cb_X.Checked)
-                _rotX -= _glRotateAngleIncriment;
-            if (cb_Y.Checked)
-                _rotY -= _glRotateAngleIncriment;
-            if (cb_Z.Checked)
-                _rotZ -= _glRotateAngleIncriment;
-        }
-
-        #endregion
 
         #region FileWriters  
 
@@ -778,20 +735,10 @@
         /// <param name="e"></param>
         private void СохранитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            btn_zoom_plus.Enabled = false;
-            btn_zoom_minus.Enabled = false;
-            btn_rotate_plus.Enabled = false;
-            btn_rotate_minus.Enabled = false;
-            cb_X.Enabled = false;
-            cb_Y.Enabled = false;
-            cb_Z.Enabled = false;
             renderTimer.Stop();
-
             saveFileDialog1 = new SaveFileDialog
             {
-                Filter = @"Stl Files (*.stl)|*.stl|Mesh Files (*.mesh)|*.mesh|GMesh Files (*.msh)|*.msh",
-                //Filter = @"Stl Files (*.stl)|*.stl|Mesh Files (*.mesh)|*.mesh",
-                FilterIndex = 1,
+                Filter = @"Stl Files (*.stl)|*.stl|Mesh Files (*.mesh)|*.mesh|GMesh Files (*.msh)|*.msh",                FilterIndex = 1,
                 RestoreDirectory = true
             };
 
@@ -1067,8 +1014,8 @@
         private void button4_Click(object sender, EventArgs e)
         {
             string aaa = lastname;
-            ResultView resultView = new ResultView(aaa);
-            resultView.Show();
+            ResultView2 resultView2 = new ResultView2(aaa);
+            resultView2.Show();
         }
 
         private double Distance(Node first, Node second)

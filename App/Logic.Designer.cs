@@ -38,7 +38,6 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.открытьФайлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.открытьПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сохранитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renderTimer = new System.Windows.Forms.Timer(this.components);
@@ -46,16 +45,8 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.btn_zoom_plus = new System.Windows.Forms.Button();
-            this.btn_zoom_minus = new System.Windows.Forms.Button();
             this.btn_render_start = new System.Windows.Forms.Button();
             this.btn_render_stop = new System.Windows.Forms.Button();
-            this.btn_rotate_plus = new System.Windows.Forms.Button();
-            this.btn_rotate_minus = new System.Windows.Forms.Button();
-            this.cb_X = new System.Windows.Forms.CheckBox();
-            this.cb_Y = new System.Windows.Forms.CheckBox();
-            this.cb_Z = new System.Windows.Forms.CheckBox();
-            this.panelOpenGl = new Tao.Platform.Windows.SimpleOpenGlControl();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.listBox1 = new System.Windows.Forms.ListBox();
@@ -63,12 +54,15 @@
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.GL_Monitor = new OpenTK.GLControl();
+            this.DrawTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -89,19 +83,11 @@
             // файлToolStripMenuItem
             // 
             this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.открытьФайлToolStripMenuItem,
             this.открытьПапкуToolStripMenuItem,
             this.сохранитьToolStripMenuItem});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
             this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.файлToolStripMenuItem.Text = "Файл";
-            // 
-            // открытьФайлToolStripMenuItem
-            // 
-            this.открытьФайлToolStripMenuItem.Name = "открытьФайлToolStripMenuItem";
-            this.открытьФайлToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.открытьФайлToolStripMenuItem.Text = "Открыть файл";
-            this.открытьФайлToolStripMenuItem.Click += new System.EventHandler(this.ОткрытьФайлToolStripMenuItem_Click);
             // 
             // открытьПапкуToolStripMenuItem
             // 
@@ -121,7 +107,6 @@
             // renderTimer
             // 
             this.renderTimer.Interval = 50;
-            this.renderTimer.Tick += new System.EventHandler(this.RenderTimer_Tick);
             // 
             // statusStrip1
             // 
@@ -148,44 +133,9 @@
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
             this.toolStripProgressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             // 
-            // btn_zoom_plus
-            // 
-            this.btn_zoom_plus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_zoom_plus.Enabled = false;
-            this.btn_zoom_plus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_zoom_plus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btn_zoom_plus.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btn_zoom_plus.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btn_zoom_plus.Location = new System.Drawing.Point(612, 27);
-            this.btn_zoom_plus.Margin = new System.Windows.Forms.Padding(0);
-            this.btn_zoom_plus.Name = "btn_zoom_plus";
-            this.btn_zoom_plus.Size = new System.Drawing.Size(33, 33);
-            this.btn_zoom_plus.TabIndex = 9;
-            this.btn_zoom_plus.Text = "+";
-            this.btn_zoom_plus.UseVisualStyleBackColor = false;
-            this.btn_zoom_plus.Click += new System.EventHandler(this.Btn_zoom_plus_Click);
-            // 
-            // btn_zoom_minus
-            // 
-            this.btn_zoom_minus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_zoom_minus.BackColor = System.Drawing.SystemColors.Control;
-            this.btn_zoom_minus.Enabled = false;
-            this.btn_zoom_minus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_zoom_minus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btn_zoom_minus.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btn_zoom_minus.Location = new System.Drawing.Point(644, 27);
-            this.btn_zoom_minus.Margin = new System.Windows.Forms.Padding(0);
-            this.btn_zoom_minus.Name = "btn_zoom_minus";
-            this.btn_zoom_minus.Size = new System.Drawing.Size(33, 33);
-            this.btn_zoom_minus.TabIndex = 10;
-            this.btn_zoom_minus.Text = "-";
-            this.btn_zoom_minus.UseVisualStyleBackColor = false;
-            this.btn_zoom_minus.Click += new System.EventHandler(this.Btn_zoom_minus_Click);
-            // 
             // btn_render_start
             // 
             this.btn_render_start.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_render_start.Enabled = false;
             this.btn_render_start.Location = new System.Drawing.Point(201, 515);
             this.btn_render_start.Name = "btn_render_start";
             this.btn_render_start.Size = new System.Drawing.Size(76, 22);
@@ -197,7 +147,6 @@
             // btn_render_stop
             // 
             this.btn_render_stop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_render_stop.Enabled = false;
             this.btn_render_stop.Location = new System.Drawing.Point(283, 515);
             this.btn_render_stop.Name = "btn_render_stop";
             this.btn_render_stop.Size = new System.Drawing.Size(74, 22);
@@ -205,98 +154,6 @@
             this.btn_render_stop.Text = "Stop";
             this.btn_render_stop.UseVisualStyleBackColor = true;
             this.btn_render_stop.Click += new System.EventHandler(this.Btn_render_stop_Click);
-            // 
-            // btn_rotate_plus
-            // 
-            this.btn_rotate_plus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_rotate_plus.Enabled = false;
-            this.btn_rotate_plus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_rotate_plus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btn_rotate_plus.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btn_rotate_plus.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btn_rotate_plus.Location = new System.Drawing.Point(645, 476);
-            this.btn_rotate_plus.Margin = new System.Windows.Forms.Padding(0);
-            this.btn_rotate_plus.Name = "btn_rotate_plus";
-            this.btn_rotate_plus.Size = new System.Drawing.Size(33, 33);
-            this.btn_rotate_plus.TabIndex = 14;
-            this.btn_rotate_plus.Text = ">";
-            this.btn_rotate_plus.UseVisualStyleBackColor = false;
-            this.btn_rotate_plus.Click += new System.EventHandler(this.Btn_rotate_plus_Click);
-            // 
-            // btn_rotate_minus
-            // 
-            this.btn_rotate_minus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_rotate_minus.BackColor = System.Drawing.SystemColors.Control;
-            this.btn_rotate_minus.Enabled = false;
-            this.btn_rotate_minus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_rotate_minus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btn_rotate_minus.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btn_rotate_minus.Location = new System.Drawing.Point(612, 476);
-            this.btn_rotate_minus.Margin = new System.Windows.Forms.Padding(0);
-            this.btn_rotate_minus.Name = "btn_rotate_minus";
-            this.btn_rotate_minus.Size = new System.Drawing.Size(33, 33);
-            this.btn_rotate_minus.TabIndex = 15;
-            this.btn_rotate_minus.Text = "<";
-            this.btn_rotate_minus.UseVisualStyleBackColor = false;
-            this.btn_rotate_minus.Click += new System.EventHandler(this.Btn_rotate_minus_Click);
-            // 
-            // cb_X
-            // 
-            this.cb_X.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cb_X.AutoSize = true;
-            this.cb_X.Enabled = false;
-            this.cb_X.ForeColor = System.Drawing.Color.Red;
-            this.cb_X.Location = new System.Drawing.Point(566, 519);
-            this.cb_X.Name = "cb_X";
-            this.cb_X.Size = new System.Drawing.Size(33, 17);
-            this.cb_X.TabIndex = 16;
-            this.cb_X.Text = "X";
-            this.cb_X.UseVisualStyleBackColor = true;
-            // 
-            // cb_Y
-            // 
-            this.cb_Y.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cb_Y.AutoSize = true;
-            this.cb_Y.Enabled = false;
-            this.cb_Y.ForeColor = System.Drawing.Color.Green;
-            this.cb_Y.Location = new System.Drawing.Point(605, 519);
-            this.cb_Y.Name = "cb_Y";
-            this.cb_Y.Size = new System.Drawing.Size(33, 17);
-            this.cb_Y.TabIndex = 17;
-            this.cb_Y.Text = "Y";
-            this.cb_Y.UseVisualStyleBackColor = true;
-            // 
-            // cb_Z
-            // 
-            this.cb_Z.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cb_Z.AutoSize = true;
-            this.cb_Z.Enabled = false;
-            this.cb_Z.ForeColor = System.Drawing.Color.Blue;
-            this.cb_Z.Location = new System.Drawing.Point(644, 519);
-            this.cb_Z.Name = "cb_Z";
-            this.cb_Z.Size = new System.Drawing.Size(33, 17);
-            this.cb_Z.TabIndex = 18;
-            this.cb_Z.Text = "Z";
-            this.cb_Z.UseVisualStyleBackColor = true;
-            // 
-            // panelOpenGl
-            // 
-            this.panelOpenGl.AccumBits = ((byte)(0));
-            this.panelOpenGl.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.panelOpenGl.AutoCheckErrors = false;
-            this.panelOpenGl.AutoFinish = false;
-            this.panelOpenGl.AutoMakeCurrent = true;
-            this.panelOpenGl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panelOpenGl.AutoSwapBuffers = true;
-            this.panelOpenGl.BackColor = System.Drawing.Color.Black;
-            this.panelOpenGl.ColorBits = ((byte)(32));
-            this.panelOpenGl.DepthBits = ((byte)(16));
-            this.panelOpenGl.Location = new System.Drawing.Point(201, 26);
-            this.panelOpenGl.Name = "panelOpenGl";
-            this.panelOpenGl.Padding = new System.Windows.Forms.Padding(3);
-            this.panelOpenGl.Size = new System.Drawing.Size(476, 483);
-            this.panelOpenGl.StencilBits = ((byte)(0));
-            this.panelOpenGl.TabIndex = 8;
             // 
             // groupBox1
             // 
@@ -359,6 +216,7 @@
             // 
             this.groupBox2.Controls.Add(this.button2);
             this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Enabled = false;
             this.groupBox2.Location = new System.Drawing.Point(10, 340);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(185, 112);
@@ -377,21 +235,10 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
-            // button3
-            // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button3.Location = new System.Drawing.Point(28, 458);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(128, 29);
-            this.button3.TabIndex = 33;
-            this.button3.Text = "Save";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button4.Location = new System.Drawing.Point(28, 493);
+            this.button4.Location = new System.Drawing.Point(28, 467);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(128, 29);
             this.button4.TabIndex = 34;
@@ -399,26 +246,44 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.GL_Monitor);
+            this.panel1.Location = new System.Drawing.Point(201, 27);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(476, 486);
+            this.panel1.TabIndex = 35;
+            // 
+            // GL_Monitor
+            // 
+            this.GL_Monitor.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.GL_Monitor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GL_Monitor.Location = new System.Drawing.Point(0, 0);
+            this.GL_Monitor.Name = "GL_Monitor";
+            this.GL_Monitor.Size = new System.Drawing.Size(476, 486);
+            this.GL_Monitor.TabIndex = 16;
+            this.GL_Monitor.VSync = false;
+            this.GL_Monitor.Load += new System.EventHandler(this.GL_Monitor_Load);
+            this.GL_Monitor.Paint += new System.Windows.Forms.PaintEventHandler(this.GL_Monitor_Paint);
+            // 
+            // DrawTimer
+            // 
+            this.DrawTimer.Enabled = true;
+            this.DrawTimer.Interval = 25;
+            this.DrawTimer.Tick += new System.EventHandler(this.DrawTimer_Tick);
+            // 
             // Logic
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 557);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.cb_Z);
-            this.Controls.Add(this.cb_Y);
-            this.Controls.Add(this.cb_X);
-            this.Controls.Add(this.btn_rotate_minus);
-            this.Controls.Add(this.btn_rotate_plus);
             this.Controls.Add(this.btn_render_stop);
             this.Controls.Add(this.btn_render_start);
-            this.Controls.Add(this.btn_zoom_minus);
-            this.Controls.Add(this.btn_zoom_plus);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.panelOpenGl);
             this.Controls.Add(this.statusStrip1);
             this.Name = "Logic";
             this.Text = "CT-Scene";
@@ -430,6 +295,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -440,7 +306,6 @@
         private FolderBrowserDialog folderBrowserDialog1;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem файлToolStripMenuItem;
-        private ToolStripMenuItem открытьФайлToolStripMenuItem;
         private ToolStripMenuItem открытьПапкуToolStripMenuItem;
         private Timer renderTimer;
         private ToolStripMenuItem сохранитьToolStripMenuItem;
@@ -448,16 +313,8 @@
         private StatusStrip statusStrip1;
         private ToolStripProgressBar toolStripProgressBar1;
         private ToolStripStatusLabel toolStripStatusLabel1;
-        private Button btn_zoom_plus;
-        private Button btn_zoom_minus;
         private Button btn_render_start;
         private Button btn_render_stop;
-        private Button btn_rotate_plus;
-        private Button btn_rotate_minus;
-        private CheckBox cb_X;
-        private CheckBox cb_Y;
-        private CheckBox cb_Z;
-        private Tao.Platform.Windows.SimpleOpenGlControl panelOpenGl;
         private GroupBox groupBox1;
         private RadioButton radioButton1;
         private RadioButton radioButton3;
@@ -465,8 +322,10 @@
         private Button button1;
         private GroupBox groupBox2;
         private Button button2;
-        private Button button3;
         private Button button4;
+        private Panel panel1;
+        private OpenTK.GLControl GL_Monitor;
+        private Timer DrawTimer;
     }
 }
 
