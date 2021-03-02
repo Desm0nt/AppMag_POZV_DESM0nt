@@ -2,14 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Windows.Forms;
-    using Tao.OpenGl;
-    using OpenCvSharp;
-    using Size = OpenCvSharp.Size;
     using System.Media;
     using System.Globalization;
     using App.Model;
@@ -28,12 +24,10 @@
     using BatuGL;
     using Mouse_Orbit;
 
-
     public partial class Logic : Form
     {
         private const int DEGREES_OF_FREEDOM = 3;
         private const int VERTEBRA_MATERIAL_ID = 2;
-        private const int INNERVERTEBRAL_DISK_MATERIAL_ID = 3;
         private const double STEP_WIDTH = 23.75; // step of the tetraherdral model by width
         private const double STEP_HEIGHT = 30; // step of the tetraherdral model by height
 
@@ -1019,6 +1013,9 @@
             // string aaa = lastname_fullpath;
             AppMainForm aa = new AppMainForm();
             aa.ShowDialog();
+            GL_Monitor1.MakeCurrent();
+            GL.Flush();
+            GL_Monitor1.SwapBuffers();
             //ResultView2 resultView2 = new ResultView2(aaa);
             //resultView2.Show();
         }
