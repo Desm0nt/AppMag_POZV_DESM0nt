@@ -17,13 +17,13 @@ namespace Desm0ntGL
 
         public static void Configure(OpenTK.GLControl refGLControl, Ortho_Mode ortho)
         {
-            GL.ClearColor(Color.Black);
+            GL.ClearColor(Color.DimGray);
             refGLControl.VSync = false;
             GL.Clear(ClearBufferMask.ColorBufferBit);
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
-            GL.ClearColor(Color.Black);
+            GL.ClearColor(Color.DimGray);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
             GL.Viewport(refGLControl.Size);

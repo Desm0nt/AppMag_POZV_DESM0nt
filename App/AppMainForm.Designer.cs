@@ -42,11 +42,11 @@
             // 
             // GL_Monitor2
             // 
-            this.GL_Monitor2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.GL_Monitor2.BackColor = System.Drawing.Color.DimGray;
             this.GL_Monitor2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GL_Monitor2.Location = new System.Drawing.Point(0, 0);
             this.GL_Monitor2.Name = "GL_Monitor2";
-            this.GL_Monitor2.Size = new System.Drawing.Size(984, 546);
+            this.GL_Monitor2.Size = new System.Drawing.Size(630, 609);
             this.GL_Monitor2.TabIndex = 15;
             this.GL_Monitor2.VSync = false;
             this.GL_Monitor2.Load += new System.EventHandler(this.GL_Monitor_Load);
@@ -58,8 +58,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 546);
+            this.ClientSize = new System.Drawing.Size(630, 609);
             this.Controls.Add(this.GL_Monitor2);
+            this.ForeColor = System.Drawing.Color.DimGray;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AppMainForm";

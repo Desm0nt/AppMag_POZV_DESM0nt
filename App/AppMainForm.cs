@@ -29,8 +29,8 @@ namespace App
         private Orbiter orb;
         Vector3 minPos = new Vector3();
         Vector3 maxPos = new Vector3();
-
-        public AppMainForm()
+        string stlpath = "";
+        public AppMainForm(string stl_path)
         {
             /* dot/comma selection for floating point numbers */
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
@@ -41,6 +41,8 @@ namespace App
             GL_Monitor2.MouseUp += orb.Control_MouseUpEvent;
             GL_Monitor2.MouseWheel += orb.Control_MouseWheelEvent;
             GL_Monitor2.KeyPress += orb.Control_KeyPress_Event;
+            stlpath = stl_path;
+
         }
 
         private void DrawTimer_Tick(object sender, EventArgs e)
@@ -58,6 +60,7 @@ namespace App
             GL_Monitor2.AllowDrop = true;
             monitorLoaded = true;
             GL.ClearColor(Color.Black);
+            ReadSelectedFile(stlpath);
         }
 
         private void AppMainForm_Load(object sender, EventArgs e)

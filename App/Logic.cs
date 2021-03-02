@@ -44,7 +44,7 @@
         ILoad load;
         IBoundaryCondition conditions;
 
-        double forceValue = 10;
+        double forceValue = 1000;
 
         bool monitorLoaded = false;
         bool moveForm = false;
@@ -1009,9 +1009,9 @@
 
         private void button4_Click(object sender, EventArgs e)
         {
-            string aaa = @"e:\123\AppMag\App\bin\Debug\0a72a763-9f46-4db0-954f-20e2a9cd4c87out3.stl";
-            // string aaa = lastname_fullpath;
-            AppMainForm aa = new AppMainForm();
+            //string aaa = @"e:\123\AppMag\App\bin\Debug\0a72a763-9f46-4db0-954f-20e2a9cd4c87out3.stl";
+            string aaa = lastname_fullpath;
+            AppMainForm aa = new AppMainForm(aaa);
             aa.ShowDialog();
             GL_Monitor1.MakeCurrent();
             GL.Flush();
