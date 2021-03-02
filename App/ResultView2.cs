@@ -20,6 +20,7 @@ namespace App
         private Orbiter orb;
         Vector3 minPos = new Vector3();
         Vector3 maxPos = new Vector3();
+        string stlpath = "";
         public ResultView2(string stl_path)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
@@ -30,7 +31,7 @@ namespace App
             GL_Monitor.MouseUp += orb.Control_MouseUpEvent;
             GL_Monitor.MouseWheel += orb.Control_MouseWheelEvent;
             GL_Monitor.KeyPress += orb.Control_KeyPress_Event;
-            ReadSelectedFile(stl_path);
+            stlpath = stl_path;
         }
 
         private void DrawTimer_Tick(object sender, EventArgs e)
@@ -54,6 +55,7 @@ namespace App
         private void ResultView2_Load(object sender, EventArgs e)
         {
             BatuGL_ALT.Configure(GL_Monitor, BatuGL_ALT.Ortho_Mode.CENTER);
+            ReadSelectedFile(stlpath);
         }
 
         private void ConfigureBasicLighting(Color modelColor)

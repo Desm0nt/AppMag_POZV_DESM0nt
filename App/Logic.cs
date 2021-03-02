@@ -38,6 +38,7 @@
         private const double STEP_HEIGHT = 30; // step of the tetraherdral model by height
 
         string lastname = "";
+        string lastname_fullpath = "";
 
         FeModel model;
         ISolution solution;
@@ -49,7 +50,7 @@
         ILoad load;
         IBoundaryCondition conditions;
 
-        double forceValue = 1;
+        double forceValue = 10;
 
         bool monitorLoaded = false;
         bool moveForm = false;
@@ -705,6 +706,7 @@
             trinagleRepository.Create2(model.Id + "out3", myvertebra, nodlist);
 
             lastname = model.Id + "out3.stl";
+            lastname_fullpath = Environment.CurrentDirectory + "\\" + lastname;
 
             MessageBox.Show($"Total time solving SLAE: {endSolve.TotalSeconds} sec.");
 
@@ -1013,7 +1015,7 @@
 
         private void button4_Click(object sender, EventArgs e)
         {
-            string aaa = lastname;
+            string aaa = lastname_fullpath;
             ResultView2 resultView2 = new ResultView2(aaa);
             resultView2.Show();
         }
