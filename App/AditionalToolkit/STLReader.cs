@@ -14,7 +14,7 @@ using System.Globalization;
 using System.Threading;
 using System;
 
-namespace STL_Tools_alt
+namespace AditionalToolkit
 {
     public class STLReader
     {
@@ -411,6 +411,7 @@ namespace STL_Tools_alt
             double Max = double.Parse(sMax.Replace(',','.'));
             double OnePercent = Max / 100;
             double colorvalue = ((col / OnePercent) / 100) * 240;
+            double fls = 20;
             HSV hsv = new HSV(240 - colorvalue, 1, 5);
             RGB rgb = HSVToRGB(hsv);
             RR = rgb.R / 255;

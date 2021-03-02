@@ -10,7 +10,7 @@
 using System.Collections.Generic;
 
 
-namespace STL_Tools_alt
+namespace AditionalToolkit
 {
 
     public static class STLExport

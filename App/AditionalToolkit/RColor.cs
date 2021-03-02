@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace STL_Tools_alt
+namespace AditionalToolkit
 {
     /// <summary>
     /// Цвет вершины.

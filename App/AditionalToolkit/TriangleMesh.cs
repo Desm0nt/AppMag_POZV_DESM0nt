@@ -8,7 +8,7 @@
   ******************************************************************************
   */
 
-namespace STL_Tools_alt
+namespace AditionalToolkit
 {
     public class TriangleMesh
     {

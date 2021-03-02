@@ -18,7 +18,7 @@ namespace BatuGL
             refGLControl.VSync = false;
             GL.Clear(ClearBufferMask.ColorBufferBit);
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc((BlendingFactor)BlendingFactorSrc.SrcAlpha, (BlendingFactor)BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             GL.ClearColor(Color.DimGray);
             GL.MatrixMode(MatrixMode.Modelview);

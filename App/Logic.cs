@@ -65,6 +65,7 @@
         private readonly List<Layer> _layers; //Список слоев
         private FormShow _formShow; //Форма для просмотра двумерных слоев
         private List<MyTriangle> _triangles;
+
         public Logic()
         {
             InitializeComponent();
@@ -73,10 +74,10 @@
             _layers = new List<Layer>();
             _triangles = new List<MyTriangle>();
             orb = new Orbiter();
-            GL_Monitor.MouseDown += orb.Control_MouseDownEvent;
-            GL_Monitor.MouseUp += orb.Control_MouseUpEvent;
-            GL_Monitor.MouseWheel += orb.Control_MouseWheelEvent;
-            GL_Monitor.KeyPress += orb.Control_KeyPress_Event;
+            GL_Monitor1.MouseDown += orb.Control_MouseDownEvent;
+            GL_Monitor1.MouseUp += orb.Control_MouseUpEvent;
+            GL_Monitor1.MouseWheel += orb.Control_MouseWheelEvent;
+            GL_Monitor1.KeyPress += orb.Control_KeyPress_Event;
             button2.Enabled = true;
         }
 
@@ -87,7 +88,7 @@
         /// <param name="e"></param>
         private void Logic_Load(object sender, EventArgs e)
         {
-            Batu_GL.Configure(GL_Monitor, Batu_GL.Ortho_Mode.CENTER);
+            Batu_GL.Configure(GL_Monitor1, Batu_GL.Ortho_Mode.CENTER);
         }
 
         #region InitMeshGeneration
@@ -106,9 +107,9 @@
             float pw = Convert.ToSingle(_layers[0].Dicom.PixelSpacingValue[0], CultureInfo.InvariantCulture.NumberFormat);
             float ph = Convert.ToSingle(_layers[0].Dicom.PixelSpacingValue[1], CultureInfo.InvariantCulture.NumberFormat);
 
-            Volume volume = new Volume(_layers,pw,ph);
-            var depth =_layers[0].Dicom.pixelDepth;
-            var space=_layers[0].Dicom.pixeSpace;
+            Volume volume = new Volume(_layers, pw, ph);
+            var depth = _layers[0].Dicom.pixelDepth;
+            var space = _layers[0].Dicom.pixeSpace;
             var t = MCCube.getTriangles(volume);
             int koeff = 18;
             for (int k = 0; k < t.Count - 2; k += 3)
@@ -170,12 +171,12 @@
                         {
                             if (x > 0 && x < width && y > 0 && y < height)
                             {
-                                color += pixels16[x*width + y];
+                                color += pixels16[x * width + y];
                                 myCount++;
                             }
                         }
                     }
-                    pixels16[i*width + j] = (ushort) (color/myCount);
+                    pixels16[i * width + j] = (ushort)(color / myCount);
                 }
             }
             return pixels16;
@@ -189,7 +190,7 @@
         private Layer GetLayer(string file)
         {
             //Декодирование Dicom файла
-            DicomDecoder dicom = new DicomDecoder {DicomFileName = file};
+            DicomDecoder dicom = new DicomDecoder { DicomFileName = file };
 
             //Усредняющий фильтр
             dicom.Pixels16 = AveragingFilter(dicom.Pixels16Origin, dicom.width, dicom.height, 5);
@@ -400,8 +401,6 @@
 
         }
 
-
-
         /// <summary>
         /// Обновление списка ListBox
         /// </summary>
@@ -421,7 +420,7 @@
         private void DrawTimer_Tick(object sender, EventArgs e)
         {
             orb.UpdateOrbiter(MousePosition.X, MousePosition.Y);
-            GL_Monitor.Invalidate();
+            GL_Monitor1.Invalidate();
             if (moveForm)
             {
                 this.SetDesktopLocation(MousePosition.X - moveOffsetX, MousePosition.Y - moveOffsetY);
@@ -430,7 +429,7 @@
 
         private void GL_Monitor_Load(object sender, EventArgs e)
         {
-            GL_Monitor.AllowDrop = true;
+            GL_Monitor1.AllowDrop = true;
             monitorLoaded = true;
             GL.ClearColor(Color.Black);
         }
@@ -483,7 +482,7 @@
             if (!monitorLoaded)
                 return;
 
-            Batu_GL.Configure(GL_Monitor, Batu_GL.Ortho_Mode.CENTER);
+            Batu_GL.Configure(GL_Monitor1, Batu_GL.Ortho_Mode.CENTER);
             if (modelVAO != null) ConfigureBasicLighting(modelVAO.color);
             GL.Translate(orb.PanX, orb.PanY, 0);
             GL.Rotate(orb.orbitStr.angle, orb.orbitStr.ox, orb.orbitStr.oy, orb.orbitStr.oz);
@@ -492,7 +491,7 @@
             GL.Translate(-(maxPos.x - minPos.x) / 2.0f, -(maxPos.y - minPos.y) / 2.0f, -(maxPos.z - minPos.z) / 2.0f);
             if (modelVAO != null) modelVAO.Draw();
 
-            GL_Monitor.SwapBuffers();
+            GL_Monitor1.SwapBuffers();
         }
 
         private void ReadSelectedFile(string fileName)
@@ -512,8 +511,8 @@
             {
                 modelVAO = null;
                 /* if there is an error, deinitialize the gl monitor to clear the screen */
-                Batu_GL.Configure(GL_Monitor, Batu_GL.Ortho_Mode.CENTER);
-                GL_Monitor.SwapBuffers();
+                Batu_GL.Configure(GL_Monitor1, Batu_GL.Ortho_Mode.CENTER);
+                GL_Monitor1.SwapBuffers();
             }
         }
 
@@ -559,7 +558,7 @@
         /// <param name="e"></param>
         private void Btn_render_start_Click(object sender, EventArgs e)
         {
-            ReadSelectedFile(Environment.CurrentDirectory +@"\Stl\Vertebras\st1\L1.stl");
+            ReadSelectedFile(Environment.CurrentDirectory + @"\Stl\Vertebras\st1\L1.stl");
         }
 
         /// <summary>
@@ -571,8 +570,8 @@
         {
             modelVAO = null;
             /* if there is an error, deinitialize the gl monitor to clear the screen */
-            Batu_GL.Configure(GL_Monitor, Batu_GL.Ortho_Mode.CENTER);
-            GL_Monitor.SwapBuffers();
+            Batu_GL.Configure(GL_Monitor1, Batu_GL.Ortho_Mode.CENTER);
+            GL_Monitor1.SwapBuffers();
         }
         #endregion
 
@@ -740,7 +739,8 @@
             renderTimer.Stop();
             saveFileDialog1 = new SaveFileDialog
             {
-                Filter = @"Stl Files (*.stl)|*.stl|Mesh Files (*.mesh)|*.mesh|GMesh Files (*.msh)|*.msh",                FilterIndex = 1,
+                Filter = @"Stl Files (*.stl)|*.stl|Mesh Files (*.mesh)|*.mesh|GMesh Files (*.msh)|*.msh",
+                FilterIndex = 1,
                 RestoreDirectory = true
             };
 
@@ -1015,9 +1015,12 @@
 
         private void button4_Click(object sender, EventArgs e)
         {
-            string aaa = lastname_fullpath;
-            ResultView2 resultView2 = new ResultView2(aaa);
-            resultView2.Show();
+            string aaa = @"e:\123\AppMag\App\bin\Debug\0a72a763-9f46-4db0-954f-20e2a9cd4c87out3.stl";
+            // string aaa = lastname_fullpath;
+            AppMainForm aa = new AppMainForm();
+            aa.ShowDialog();
+            //ResultView2 resultView2 = new ResultView2(aaa);
+            //resultView2.Show();
         }
 
         private double Distance(Node first, Node second)

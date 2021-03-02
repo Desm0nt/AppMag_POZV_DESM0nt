@@ -56,7 +56,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.GL_Monitor = new OpenTK.GLControl();
+            this.GL_Monitor1 = new OpenTK.GLControl();
             this.DrawTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -248,23 +248,23 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.GL_Monitor);
+            this.panel1.Controls.Add(this.GL_Monitor1);
             this.panel1.Location = new System.Drawing.Point(201, 27);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(476, 486);
             this.panel1.TabIndex = 35;
             // 
-            // GL_Monitor
+            // GL_Monitor1
             // 
-            this.GL_Monitor.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.GL_Monitor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GL_Monitor.Location = new System.Drawing.Point(0, 0);
-            this.GL_Monitor.Name = "GL_Monitor";
-            this.GL_Monitor.Size = new System.Drawing.Size(476, 486);
-            this.GL_Monitor.TabIndex = 16;
-            this.GL_Monitor.VSync = false;
-            this.GL_Monitor.Load += new System.EventHandler(this.GL_Monitor_Load);
-            this.GL_Monitor.Paint += new System.Windows.Forms.PaintEventHandler(this.GL_Monitor_Paint);
+            this.GL_Monitor1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.GL_Monitor1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GL_Monitor1.Location = new System.Drawing.Point(0, 0);
+            this.GL_Monitor1.Name = "GL_Monitor1";
+            this.GL_Monitor1.Size = new System.Drawing.Size(476, 486);
+            this.GL_Monitor1.TabIndex = 16;
+            this.GL_Monitor1.VSync = false;
+            this.GL_Monitor1.Load += new System.EventHandler(this.GL_Monitor_Load);
+            this.GL_Monitor1.Paint += new System.Windows.Forms.PaintEventHandler(this.GL_Monitor_Paint);
             // 
             // DrawTimer
             // 
@@ -324,8 +324,8 @@
         private Button button2;
         private Button button4;
         private Panel panel1;
-        private OpenTK.GLControl GL_Monitor;
         private Timer DrawTimer;
+        private OpenTK.GLControl GL_Monitor1;
     }
 }
 

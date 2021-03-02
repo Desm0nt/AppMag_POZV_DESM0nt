@@ -9,9 +9,9 @@
 using System.Drawing;
 using OpenTK.Graphics.OpenGL;
 
-namespace BatuGLALT
+namespace Desm0ntGL
 {
-    public static class BatuGL_ALT
+    public static class Desm0nt_GL
     {
         public enum Ortho_Mode { CENTER, BLEFT };
 
@@ -21,7 +21,7 @@ namespace BatuGLALT
             refGLControl.VSync = false;
             GL.Clear(ClearBufferMask.ColorBufferBit);
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc((BlendingFactor)BlendingFactorSrc.SrcAlpha, (BlendingFactor)BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             GL.ClearColor(Color.Black);
             GL.MatrixMode(MatrixMode.Modelview);
